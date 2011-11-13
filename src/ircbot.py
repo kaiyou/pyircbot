@@ -164,7 +164,7 @@ class BotProtocol (IRCClient, object):
 		'''
 		Launches a specific command
 		'''
-		self.sendLine ('%s %s' % (command, args))
+		self.sendLine ('%s %s' % (command, ' '.join (args)))
 
 class DebugBotProtocol(BotProtocol):
 	'''
@@ -176,13 +176,13 @@ class DebugBotProtocol(BotProtocol):
 		if self.factory.debug:
 			out.append ('%s \x02<-\x02 %s' % (channel, message))
 		else:
-			super(DebugBotProtocol, self).sendmsg (channel, message)
+			super(DebugBotProtocol, self).sendmsg (out, channel, message)
 		
 	def command (self, out, command, *args):
 		if self.factory.debug:
 			out.append ('\x02%s\x02 %s' % (command, ' '.join (args)))
 		else:
-			super(DebugBotProtocol, self).command (command, *args)
+			super(DebugBotProtocol, self).command (out, command, *args)
 			
 	@botcommand
 	def debug (self, flow, out, user, channel, value = None):
