@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from core import BotProtocol, botcommand
+from ast import literal_eval
+
 class ListBulkingBotProtocol (BotProtocol):
 	'''
 	I am a bot protocol that allow users to manipulate lists without having to
@@ -40,3 +43,45 @@ class ListBulkingBotProtocol (BotProtocol):
 		'''
 		expr = ' '.join (expr)
 		return map (lambda x: eval (expr,{'__builtins__':None},{'x': x}), flow)
+
+	@botcommand
+	def echo (self, flow, out, user, channel, *args):
+		'''
+		\x02echo\x02 <item> [<item> [...]]
+		Simply outputs a list of items
+		'''
+		result = (flow if type(flow) is list else []) + list(args)
+		result = [str(x) for x in result]
+		out.append ('\x02Output:\x02 %s' % ', '.join (result))
+		return result
+
+	@botcommand
+	def mass (self, flow, out, user, channel, *args):
+		'''
+		\x02mass\x02 <command> [<arguments>]
+		Execute the command with the specified arguments mapped on every piped list item
+		The arguments string must contain '%s' exactly once, which will hold the iterated items
+		'''
+		command = args[0]
+		args = args[1:]
+		for item in flow:
+			d = self._launch (user, channel, [(command, map(lambda x: x.replace('?',item), args))])
+
+class PyBotProtocol (BotProtocol):
+	'''
+	I am a bot protocol that allow the user to evaluate Python statements
+	'''
+	@botcommand
+	def py (self, flow, out, user, channel, *args):
+		'''
+		\x02py\x02 <python statement>
+		Executes the specified python statement. The incoming piped message is stored in 'x'
+		Examples : 'py 1', 'py 1+1', 'py [1,2,3]'
+		'''
+		result = eval (' '.join (args),{'__builtins__':None},{'x': flow})
+		if type (result) is list:
+			result = [str (x) for x in result]
+		else:
+			result = [str (result)]
+		out.append ('\x02Python:\x02 %s' % ', '.join (result))
+		return result

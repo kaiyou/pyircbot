@@ -16,6 +16,35 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from core import BotProtocol, botcommand
+
+class RawBotProtocol (BotProtocol):
+	'''
+	I am a bot protocol that alows the user to send raw information to the server
+	'''			
+	@botcommand
+	def do (self, flow, out, user, channel, *args):
+		'''
+		\x02do\x02 <something>
+		Sends something raw to the IRC server, this must be explicitelly
+		allowed by the regexp mechanism
+		'''
+		command = args[0]
+		args = ' '.join (args[1:])
+		allowed = False
+		if command in self.factory.do:
+			for regexp in self.factory.do[command][0]:
+				if re.search (regexp, args):
+					allowed = True
+			for regexp in self.factory.do[command][1]:
+				if re.search (regexp, args):
+					allowed = False
+		if not allowed:
+			out.append ('\x02Error\x02 Command not allowed')
+		else:
+			out .append ('\x02Do:\x02 [%s] %s' % (command, args))
+			self.command (out, command, args)
+
 class WhoBotProtocol (BotProtocol):
 	'''
 	I am a bot protocol which implements the /who command to list users
@@ -52,7 +81,7 @@ class WhoBotProtocol (BotProtocol):
 			[(<nickname>, <host>, <mode>,), ...]
 		'''
 		result = self._who (what)
-		out.append ('\x02Channels %s:\x02 %s' % (what, ', '.join ([x[0] for x in result]))
+		out.append ('\x02Channels %s:\x02 %s' % (what, ', '.join ([x[0] for x in result])))
 		return result
 		
 	def connectionMade (self):

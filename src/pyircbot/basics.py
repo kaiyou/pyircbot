@@ -16,8 +16,9 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from core import BotProtocol
+from core import BotProtocol, BotRegister, botcommand
 from datetime import datetime
+from twisted.internet import reactor
 
 class DebugBotProtocol(BotProtocol):
 	'''
@@ -47,6 +48,14 @@ class DebugBotProtocol(BotProtocol):
 		if not value is None:
 			self.factory.debug = not value == '0'
 		out.append ('Debug is ' + ('enabled' if self.factory.debug else 'disabled'))
+
+	@botcommand
+	def stop (self, flow, out, user, channel):
+		'''
+		\x02stop\x02
+		Stops the IRC bot
+		'''
+		reactor.stop ()
 	
 class HelpBotProtocol(BotProtocol):
 	'''
@@ -81,3 +90,25 @@ class VersionBotProtocol (BotProtocol):
 	def connectionMade (self):
 		self._startTime = datetime.now ()
 		super (VersionBotProtocol, self).connectionMade ()
+
+class ChannelsBotProtocol (BotProtocol):
+	'''
+	I am a bot protocol that can respond to join and leave commands
+	'''
+	@botcommand
+	def joinchan (self, flow, out, user, channel):
+		'''
+		\x02joinchan\x02
+		Joins every channel from the input flow
+		'''
+		for chan in flow:
+			self.join (chan)
+			
+	@botcommand
+	def leavechan (self, flow, out, user, channel):
+		'''
+		\x02leavechan\x02
+		Leaves every channel from the input flow
+		'''
+		for chan in flow:
+			self.leave (chan)
