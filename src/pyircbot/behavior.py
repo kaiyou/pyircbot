@@ -17,6 +17,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from core import BotProtocol, botcommand
+from twisted.internet.defer import Deferred
 from twisted.internet.task import LoopingCall
 import shelve
 import new

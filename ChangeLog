@@ -1,5 +1,7 @@
 2011-11-15	kaiyou <pierre@jaury.eu>
 
+	* src/pyircbot/behavior.py: added missing include for Deferred
+
 	* src/pyircbot/examples/cow.py: wrote a dummy example robot that
 	  acts like a cow
 
