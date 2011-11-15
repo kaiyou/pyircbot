@@ -19,7 +19,10 @@
 from twisted.words.protocols.irc import IRCClient
 from twisted.internet.protocol import ClientFactory
 from twisted.internet.defer import Deferred
+from twisted.internet.task import LoopingCall
+import shelve
 import re
+import new
 
 class BotRegister(object):
 	'''
@@ -354,12 +357,57 @@ class WhoBotProtocol (BotProtocol):
 		self._whoqueries = {}
 		self._whobuffers = {}
 		super(WhoBotProtocol, self).connectionMade ()
+
+class AliasBotProtocol (BotProtocol):
+	'''
+	I am a bot protocol which implement command aliases
+	'''
+	def connectionMade (self):
+		'''
+		Initialization of specific attributes
+		'''
+		self._aliases = {}
+		self._aliases = shelve.open('aliases.db', flag='c', protocol=None, 
+					    writeback=True)
+		loop = LoopingCall (self._aliases.sync)
+		loop.start (10)
+		super(AliasBotProtocol, self).connectionMade ()
+
+	@botcommand
+	def setAlias (self, flow, out, user, channel, name, *command):
+		command = ' '.join (command).replace ('=>', '->')
+		self._aliases[name] = command
+		out.append ('\x02Saved %s as\x02: %s' % (name, command))
+
+	@botcommand
+	def listAliases (self, flow, out, user, channel):
+		for name, command in self._aliases.items ():
+			out.append ('\x02%s:\x02 %s' % (name, command))
+
+	@botcommand
+	def delAlias (self, flow, out, user, channel, name):
+		if name not in self._aliases:
+			out.append ('\x02Warning\x02 Unkown alias %s' % name)
+		out.append ('Deleted alias \x02%s\x02' % name)
+		del self._aliases[name]
+
+	def _check (self, user, channel, command, args):
+		return (super(AliasBotProtocol, self)._check (user, channel, command, args)
+			or command in self._aliases)
+	
+	def __getattr__ (self, name):
+		if name in self._aliases:
+			def f (self, flow, out, user, channel, *args):
+				self._handle (user, channel, self._aliases[name] % args)
+			return new.instancemethod (f, self, self.__class__)
+		else:
+			raise AttributeError
+	
 				
-class BotFactory (ClientFactory):
+class BotFactory (ClientFactory, object):
 	'''
 	I'm a generic irc bot factory
 	'''
-	# TODO: handle persistent storage
 	def __init__ (self, nickname, password, channels, bang, pipe):
 		self.nickname = nickname
 		self.password = password
@@ -369,4 +417,3 @@ class BotFactory (ClientFactory):
 
 	def clientConnectionLost (self, connector, reason):
 		connector.connect ()
-
