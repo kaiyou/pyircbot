@@ -18,7 +18,7 @@
 
 from twisted.words.protocols.irc import IRCClient
 from twisted.internet.protocol import ClientFactory
-from twisted.internet.defer import Deferred
+from twisted.internet.defer import Deferred, inlineCallbacks, returnValue
 from twisted.internet.task import LoopingCall
 import shelve
 import re
@@ -84,6 +84,7 @@ class BotProtocol (IRCClient, object):
 		'''
 		for line in out:
 			self.msg (channel, line)
+		return flow
 
 	def _error (self, error, out, user, channel, command, args):
 		'''
@@ -98,7 +99,7 @@ class BotProtocol (IRCClient, object):
 		commands = message.split('->') # separates the commands
 		commands = [x.split(' ') for x in commands] # splitting
 		commands = [(words[0], words[1:]) for words in commands] # (command, arguments)
-		self._launch (user, channel, commands)
+		return self._launch (user, channel, commands)
 		
 	def _launch (self, user, channel, commands):
 		'''
@@ -399,7 +400,7 @@ class AliasBotProtocol (BotProtocol):
 		if name in self._aliases:
 			def f (self, flow, out, user, channel, *args):
 				args = dict (zip (map (str, range (len (args))), args))
-				self._handle (user, channel, self._aliases[name] % args)
+				return  self._handle (user, channel, self._aliases[name] % args)
 			return new.instancemethod (f, self, self.__class__)
 		else:
 			raise AttributeError
