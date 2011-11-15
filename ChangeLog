@@ -1,2 +1,14 @@
+2011-11-15	kaiyou <pierre@jaury.eu>
 
+	* Lots of code refactoring to ensure project independancy
+	
+	* Included embedded version display
+
+2011-11-13	kaiyou <pierre@jaury.eu>
+
+	* Project is reborn from OGNBot after merging in August
+
+	* Lots of cleaning and documentation
+
+	* Website available: <http://blitzen.pierre.jaury.eu:8080>
 

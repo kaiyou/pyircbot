@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from . import __version__, __website__
 from core import BotProtocol, BotRegister, botcommand
 from datetime import datetime
 from twisted.internet import reactor
@@ -83,9 +84,10 @@ class VersionBotProtocol (BotProtocol):
 	'''
 	@botcommand
 	def version (self, flow, out, user, channel):
+		out.append ('\x02Hi, I am a nice PyIRCBot powered robot!')
 		out.append ('Bot version: %s, running since %s' % (self.__version__, str (self._startTime)))
-		out.append ('PyIRCBot version: %s, visit %s' % (pyircbot.__version__, pyircbot.website))
-		out.append ('This is free software, feel free to use, modify, extend and contribute')
+		out.append ('PyIRCBot version: %s, visit and report bugs at <%s>' % (__version__, __website__))
+		out.append ('This is free software, feel free to use, modify, extend or contribute!')
 
 	def connectionMade (self):
 		self._startTime = datetime.now ()

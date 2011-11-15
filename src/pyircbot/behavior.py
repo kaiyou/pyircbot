@@ -153,5 +153,3 @@ class AliasBotProtocol (BotProtocol):
 				args = dict (zip (map (str, range (len (args))), args))
 				return  self._handle (user, channel, self._aliases[name] % args)
 			return new.instancemethod (f, self, self.__class__)
-		else:
-			raise AttributeError

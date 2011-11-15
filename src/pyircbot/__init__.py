@@ -16,6 +16,6 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__version_info__ = ('0', '1')
+__version_info__ = ('0', '2', '1')
 __version__ = '.'.join(__version_info__)
 __website__ = 'http://blitzen.pierre.jaury.eu:8080'
