@@ -398,6 +398,7 @@ class AliasBotProtocol (BotProtocol):
 	def __getattr__ (self, name):
 		if name in self._aliases:
 			def f (self, flow, out, user, channel, *args):
+				args = dict (zip (range (leng (args)), args))
 				self._handle (user, channel, self._aliases[name] % args)
 			return new.instancemethod (f, self, self.__class__)
 		else:
