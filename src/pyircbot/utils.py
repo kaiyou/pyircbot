@@ -17,7 +17,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from core import BotProtocol, botcommand
-from twisted.internet.defer import Deferred
+from twisted.internet.defer import Deferred, inlineCallbacks, returnValue
 
 class RawBotProtocol (BotProtocol):
 	'''
