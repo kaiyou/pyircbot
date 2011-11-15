@@ -17,6 +17,7 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from core import BotProtocol
+from datetime import datetime
 
 class DebugBotProtocol(BotProtocol):
 	'''
@@ -67,3 +68,16 @@ class HelpBotProtocol(BotProtocol):
 				[x for x in BotRegister.commands.keys () if self._check (user, channel, x, [])]
 			))
 
+class VersionBotProtocol (BotProtocol):
+	'''
+	I am a bot protocol aware of its imlementation version
+	'''
+	@botcommand
+	def version (self, flow, out, user, channel):
+		out.append ('Bot version: %s, running since %s' % (self.__version__, str (self._startTime)))
+		out.append ('PyIRCBot version: %s, visit %s' % (pyircbot.__version__, pyircbot.website))
+		out.append ('This is free software, feel free to use, modify, extend and contribute')
+
+	def connectionMade (self):
+		self._startTime = datetime.now ()
+		super (VersionBotProtocol, self).connectionMade ()
