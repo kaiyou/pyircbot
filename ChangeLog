@@ -1,8 +1,9 @@
 2011-11-15	kaiyou <pierre@jaury.eu>
 
-	* src/pyircbot/utils.py: added missing include for Deferred
+	* src/pyircbot/utils.py: added missing include for Deferred and re
 
 	* src/pyircbot/behavior.py: added missing include for Deferred
+	  some inlineCallbacks were missing as well
 
 	* src/pyircbot/examples/cow.py: wrote a dummy example robot that
 	  acts like a cow

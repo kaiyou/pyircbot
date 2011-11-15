@@ -18,6 +18,7 @@
 
 from core import BotProtocol, botcommand
 from twisted.internet.defer import Deferred, inlineCallbacks, returnValue
+import re
 
 class RawBotProtocol (BotProtocol):
 	'''
