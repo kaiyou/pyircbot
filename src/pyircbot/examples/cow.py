@@ -22,7 +22,7 @@
 
 # Please note this implentation is perfectly wrong, just to illustrate
 # how you can hack into PyIRCBot design to drive it with runtime built
-# functions and whatsoever
+# commands and whatsoever
 
 from ..core import *
 from random import choice
