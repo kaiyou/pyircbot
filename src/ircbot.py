@@ -403,6 +403,18 @@ class AliasBotProtocol (BotProtocol):
 			return new.instancemethod (f, self, self.__class__)
 		else:
 			raise AttributeError
+
+class ListBulkingBotProtocol (BotProtocol):
+	@botcommand
+	def filter (self, flow, out, user, channel, *expr):
+		expr = ' '.join (expr)
+		return filter (lambda x: eval (expr,{'__builtins__':None},{'x': x}), flow)
+
+	@botcommand
+	def map (self, flow, out, user, channel, *expr):
+		expr = ' '.join (expr)
+		return map (lambda x: eval (expr,{'__builtins__':None},{'x': x}), flow)
+
 	
 				
 class BotFactory (ClientFactory, object):
