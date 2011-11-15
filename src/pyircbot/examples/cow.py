@@ -38,9 +38,10 @@ class CowBotProtocol (BotProtocol):
 			return self.mooo
 			
 	def mooo (self, flow, out, user, channel):
+		user = user.split ('!') [0]
 		mo = 'm' + ''.join ([choice(['o','0']) 
 				     for i in range(choice(range(5,30)))])
-		out.append ('\x02%s\x02: %s', % (channel, mo))
+		out.append ('\x02%s\x02: %s' % (user, mo))
 
 class CowBotFactory (BotFactory):
 	protocol = CowBotProtocol
