@@ -2,7 +2,7 @@
 
 PyIRCBot
 
-PyIRCBot is released as a Python module and a couple of classes to be extended 
+PyIRCBot is released as a Python package and a couple of classes to be extended 
 and build a full featured application. It aims at serving as an easy to use 
 Python framework for people prototyping IRC robots. It makes extensive use of 
 asynchronous development model and Reactor design pattern through the 
