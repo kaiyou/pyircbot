@@ -82,6 +82,7 @@ class WhoBotProtocol (BotProtocol):
 			[(<nickname>, <host>, <mode>,), ...]
 		'''
 		result = self._who (what)
+		print result
 		out.append ('\x02Channels %s:\x02 %s' % (what, ', '.join ([x[0] for x in result])))
 		return result
 		
