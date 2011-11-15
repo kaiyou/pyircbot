@@ -71,7 +71,8 @@ class WhoBotProtocol (BotProtocol):
 			self._whoqueries[args[1]].callback (self._whobuffers[args[1]])
 			del self._whoqueries[args[1]]
 			del self._whobuffers[args[1]]
-		
+	
+	@inlineCallbacks	
 	@botcommand
 	def who (self, flow, out, user, channel, what):
 		'''
@@ -81,10 +82,10 @@ class WhoBotProtocol (BotProtocol):
 			
 			[(<nickname>, <host>, <mode>,), ...]
 		'''
-		result = self._who (what)
+		result = yield self._who (what)
 		print result
 		out.append ('\x02Channels %s:\x02 %s' % (what, ', '.join ([x[0] for x in result])))
-		return result
+		returnValue (result)
 		
 	def connectionMade (self):
 		'''
