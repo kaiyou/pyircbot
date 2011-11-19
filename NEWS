@@ -1,12 +1,20 @@
 OGNBot NEWS - User visible changes.
 
-* Noteworthy changes in release ?.?.? (?) [stable]
+* Noteworthy changes in release 0.2.? (?) [stable]
   Released by ?, based on fossil check-in [?]
+
+* Noteworthy changes in release 0.2.2 (2011-11-19) [stable]
+  Released by kaiyou, based on fossil check-in [5fea44401e]
 
 ** Included a couple of simple robot examples
 
 - cow.py, which implements a simple cow behavior, say "mooooo", it will
   reply in cow language
+
+** Added a LoggingBotProtocol in behaviors, that logs every incoming or
+   outgoing message or command
+
+** Alias might now be piped to other commands and used in other aliases
 
 * Noteworthy changes in release 0.2.1 (2011-11-15) [stable]
   Released by kaiyou, based on fossil check-in [303022a224]
