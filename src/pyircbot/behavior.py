@@ -30,15 +30,15 @@ class LoggingBotProtocol(BotProtocol):
 	'''
 	def privmsg (self, user, channel, message):
 		log.msg ('incoming %s %s %s' % (user, channel, message))
-		super (LoggingBotProtocol).privmsg (self, user, channel, message)
+		super (LoggingBotProtocol, self).privmsg (user, channel, message)
 
-	def sendmsg (self, out, channel, message):
+	def msg (self, channel, message):
 		log.msg ('outgoing %s %s' % (channel, message))
-		super (LoggingBotProtocol).sendmsg (self, out, channel, message)
+		super (LoggingBotProtocol, self).msg (channel, message)
 
 	def command (self, out, command, *args):
 		log.msg ('command %s %s' % (command, ' '.join (args)))
-		super (LoggingBotProtocol).command (self, out, command, *args)
+		super (LoggingBotProtocol, self).command (out, command, *args)
 
 class AsynchronousCallBotProtocol(BotProtocol):
 	'''
