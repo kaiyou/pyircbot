@@ -1,5 +1,9 @@
 2011-11-19	kaiyou <pierre@jaury.eu>
 
+	* NEWS: new release 0.2.2
+
+	* src/pyircbot/__init__.py: new release 0.2.2
+
 	* src/pyircbot/core.py: added logging feature and modified the
 	  behavior of `_handle` and `_launch` so that piping aliases
 	  should now work
