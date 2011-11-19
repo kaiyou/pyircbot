@@ -19,8 +19,26 @@
 from core import BotProtocol, botcommand
 from twisted.internet.defer import Deferred
 from twisted.internet.task import LoopingCall
+from twisted.python import log
 import shelve
 import new
+
+class LoggingBotProtocol(BotProtocol):
+	'''
+	I am a bot protocol which is able to log commands and messages to
+	a file-like object.
+	'''
+	def privmsg (self, user, channel, message):
+		log.msg ('incoming %s %s %s' % (user, channel, message))
+		super (LoggingBotProtocol).privmsg (self, user, channel, message)
+
+	def sendmsg (self, out, channel, message):
+		log.msg ('outgoing %s %s' % (channel, message))
+		super (LoggingBotProtocol).sendmsg (self, out, channel, message)
+
+	def command (self, out, command, *args):
+		log.msg ('command %s %s' % (command, ' '.join (args)))
+		super (LoggingBotProtocol).command (self, out, command, *args)
 
 class AsynchronousCallBotProtocol(BotProtocol):
 	'''
@@ -92,7 +110,7 @@ class AsynchronousCallBotProtocol(BotProtocol):
 		'''
 		if channel in self.factory.sync:
 			self._sync (user, channel, message)
-		super(AsynchronousCallBotProtocol, self)._handle (user, channel, message)
+		return super(AsynchronousCallBotProtocol, self)._handle (user, channel, message)
 
 class AliasBotProtocol (BotProtocol):
 	'''
@@ -118,9 +136,12 @@ class AliasBotProtocol (BotProtocol):
 		Arguments to the alias can be retrived using %(0)s, %(1)s, etc.
 		\x02Aliases shall not be piped to other commands for now.\x02
 		'''
-		command = ' '.join (command).replace ('=>', '->')
-		self._aliases[name] = command
-		out.append ('\x02Saved %s as\x02: %s' % (name, command))
+		if name in dir (self) or name.startswith ('_'):
+			out.append ('\x02Error\x02: illegal alias name')
+		else:
+			command = ' '.join (command).replace ('=>', '->')
+			self._aliases[name] = command
+			out.append ('\x02Saved %s as\x02: %s' % (name, command))
 
 	@botcommand
 	def listAliases (self, flow, out, user, channel):

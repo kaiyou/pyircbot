@@ -1,3 +1,13 @@
+2011-11-19	kaiyou <pierre@jaury.eu>
+
+	* src/pyircbot/core.py: added logging feature and modified the
+	  behavior of `_handle` and `_launch` so that piping aliases
+	  should now work
+
+	* src/pyirc/behavior: added logging feature and `setAlias` now
+	  prevents the user to override existing functions; `_handle` now
+	  returns the produced Deferred
+
 2011-11-15	kaiyou <pierre@jaury.eu>
 
 	* src/pyircbot/utils.py: added missing include for Deferred and re

@@ -19,6 +19,7 @@
 from twisted.words.protocols.irc import IRCClient
 from twisted.internet.protocol import ClientFactory
 from twisted.internet.defer import Deferred
+from twisted.python import log
 
 class BotRegister(object):
 	'''
@@ -86,7 +87,7 @@ class BotProtocol (IRCClient, object):
 		'''
 		Called when one step of the handling chain failed
 		'''
-		print error
+		log.err (error)
 
 	def _handle (self, user, channel, message):
 		'''
@@ -94,8 +95,18 @@ class BotProtocol (IRCClient, object):
 		'''
 		commands = message.split('->') # separates the commands
 		commands = [x.split(' ') for x in commands] # splitting
-		commands = [(words[0], words[1:]) for words in commands] # (command, arguments)
-		return self._launch (user, channel, commands)
+		commands = [(words[0], words[1:], []) for words in commands]
+
+		d = Deferred()
+		launch = self._launch (user, channel, commands)
+		if launch:
+			command, args, out = commands[0] # first command, setting up
+			d.addCallback(self._setup, [], user, channel, command, args)
+			d.chainDeferred (launch)
+			command, args, out = commands[-1] # tearing down
+			d.addCallback(self._teardown, out, user, 
+				      channel, command, args)
+		return d
 		
 	def _launch (self, user, channel, commands):
 		'''
@@ -104,21 +115,14 @@ class BotProtocol (IRCClient, object):
 			
 			[(command, args), (command, args), ...]
 		'''
+		d = Deferred()
 		if not all([self._check (user, channel, command, args) 
-			    for command, args in commands]):
-			return None
-		d = Deferred() # asynchronous deferred
-		command, args = commands[0] # first command, setting up
-		out = [] # output list
-		d.addCallback(self._setup, out, user, channel, command, args)
-		for command, args in commands: # chaining every command
-			out = [] # output list
+			    for command, args, out in commands]):
+			return d
+		for command, args, out in commands: # chaining every command
 			function = getattr (self, command)
 			d.addCallback(function, out, user, channel, *args)
 			d.addErrback(self._error, out, user, channel, command, args)
-		command, args = commands[-1] # last command, tearing down
-		d.addCallback(self._teardown, out, user, channel, command, args)
-		d.callback(None) # fires everything
 		return d
 
 	def signedOn (self):
@@ -145,7 +149,7 @@ class BotProtocol (IRCClient, object):
 			message = message[len (self.factory.bang):]
 		else:
 			channel = user.split ('!')[0] # trick to reply directly
-		self._handle (user, channel, message)
+		self._handle (user, channel, message).callback (None)
 			
 	def sendmsg (self, out, channel, message):
 		'''
