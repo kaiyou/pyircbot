@@ -104,13 +104,13 @@ class AsynchronousCallBotProtocol(BotProtocol):
 		self._buffer = {key: [] for key in self.factory.sync}
 		super(AsynchronousCallBotProtocol, self).connectionMade ()
 
-	def _handle (self, user, channel, message):
+	def _handle (self, user, channel, message, wrap):
 		'''
 		Triggers the _sync method if necessary
 		'''
 		if channel in self.factory.sync:
 			self._sync (user, channel, message)
-		return super(AsynchronousCallBotProtocol, self)._handle (user, channel, message)
+		return super(AsynchronousCallBotProtocol, self)._handle (user, channel, message, wrap)
 
 class AliasBotProtocol (BotProtocol):
 	'''

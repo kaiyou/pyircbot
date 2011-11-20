@@ -62,10 +62,9 @@ class ListBulkingBotProtocol (BotProtocol):
 		Execute the command with the specified arguments mapped on every piped list item
 		The arguments string must contain '%s' exactly once, which will hold the iterated items
 		'''
-		command = args[0]
-		args = args[1:]
+		command = ' '.join (args).replace ('=>', '->')
 		for item in flow:
-			d = self._launch (user, channel, [(command, map(lambda x: x.replace('?',item), args))])
+			self._handle (user, channel, self._handle(user, channel, command.replace ('?', item)))
 
 class PyBotProtocol (BotProtocol):
 	'''
