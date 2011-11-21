@@ -64,7 +64,7 @@ class ListBulkingBotProtocol (BotProtocol):
 		'''
 		command = ' '.join (args).replace ('=>', '->')
 		for item in flow:
-			self._handle (user, channel, self._handle(user, channel, command.replace ('?', item)))
+			self._handle (user, channel, command.replace ('?', item))
 
 class PyBotProtocol (BotProtocol):
 	'''
