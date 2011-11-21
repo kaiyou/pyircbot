@@ -67,6 +67,7 @@ class ListBulkingBotProtocol (BotProtocol):
 		command = ' '.join (args).replace ('=>', '->')
 		for item in flow:
 			d.chainDeferred (self._handle (user, channel, command.replace ('?', item)))
+		d.callback (None)
 		return d
 
 class PyBotProtocol (BotProtocol):

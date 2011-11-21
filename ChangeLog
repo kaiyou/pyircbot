@@ -1,11 +1,13 @@
 2011-11-21	kaiyou <pierre@jaury.eu>
 
+	* src/pyircbot/behavior.py: aliases output is now displayed
+
 	* src/pyircbot/evaluation.py: repaired the mass function
 
 2011-11-20	kaiyou <pierre@jaury.eu>
 
 	* src/pyircbot/core.py: repaired block chaining, removed useless
-	  _launch function
+	  `_launch` function
 
 2011-11-19	kaiyou <pierre@jaury.eu>
 

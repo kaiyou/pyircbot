@@ -173,5 +173,5 @@ class AliasBotProtocol (BotProtocol):
 		if name in self._aliases:
 			def f (self, flow, out, user, channel, *args):
 				args = dict (zip (map (str, range (len (args))), args))
-				return  self._handle (user, channel, self._aliases[name] % args)
+				return  self._handle (user, channel, self._aliases[name] % args, True)
 			return new.instancemethod (f, self, self.__class__)
