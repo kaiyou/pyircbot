@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from twisted.internet.defer import Deferred
 from core import BotProtocol, botcommand
 from ast import literal_eval
 
@@ -62,9 +63,11 @@ class ListBulkingBotProtocol (BotProtocol):
 		Execute the command with the specified arguments mapped on every piped list item
 		The arguments string must contain '%s' exactly once, which will hold the iterated items
 		'''
+		d = Deferred ()
 		command = ' '.join (args).replace ('=>', '->')
 		for item in flow:
-			self._handle (user, channel, command.replace ('?', item))
+			d.chainDeferred (self._handle (user, channel, command.replace ('?', item)))
+		return d
 
 class PyBotProtocol (BotProtocol):
 	'''
