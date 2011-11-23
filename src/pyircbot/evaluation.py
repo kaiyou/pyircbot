@@ -62,7 +62,7 @@ class ListBulkingBotProtocol (BotProtocol):
 		\x02echo\x02 [<name>]
 		Displays the input list, named as specified
 		'''
-		out.append ('\x02%s:\x02 %s' % (name, ', '.join (result)))
+		out.append ('\x02%s:\x02 %s' % (name, ', '.join (flow)))
 
 	@botcommand
 	def mass (self, flow, out, user, channel, *args):
