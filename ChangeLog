@@ -1,3 +1,8 @@
+2011-11-23	kaiyou <pierre@jaury.eu>
+	
+	* src/pyircbot/evaluation.py: renamed `echo` as `cat` and added
+	  a proper `echo` function
+
 2011-11-21	kaiyou <pierre@jaury.eu>
 
 	* src/pyircbot/behavior.py: aliases output is now displayed

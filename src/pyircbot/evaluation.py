@@ -46,15 +46,23 @@ class ListBulkingBotProtocol (BotProtocol):
 		return map (lambda x: eval (expr,{'__builtins__':None},{'x': x}), flow)
 
 	@botcommand
-	def echo (self, flow, out, user, channel, *args):
+	def cat (self, flow, out, user, channel, *args):
 		'''
-		\x02echo\x02 <item> [<item> [...]]
-		Simply outputs a list of items
+		\x02cat\x02 <item> [<item> [...]]
+		Simply concatenates input list with arguments
 		'''
 		result = (flow if type(flow) is list else []) + list(args)
 		result = [str(x) for x in result]
-		out.append ('\x02Output:\x02 %s' % ', '.join (result))
+		# out.append ('\x02Output:\x02 %s' % ', '.join (result))
 		return result
+
+	@botcommand
+	def echo (self, flow, out, user, channel, name = 'Output'):
+		'''
+		\x02echo\x02 [<name>]
+		Displays the input list, named as specified
+		'''
+		out.append ('\x02%s:\x02 %s' % (name, ', '.join (result)))
 
 	@botcommand
 	def mass (self, flow, out, user, channel, *args):
