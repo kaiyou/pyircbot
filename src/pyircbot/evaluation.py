@@ -33,7 +33,7 @@ class ListBulkingBotProtocol (BotProtocol):
 		items are bound to 'x', the expression should evaluate to True or False
 		'''
 		expr = ' '.join (expr)
-		return filter (lambda x: eval (expr,{'__builtins__':None},{'x': x}), flow)
+		return filter (lambda x: self._safe_eval (expr, x=x), flow)
 
 	@botcommand
 	def map (self, flow, out, user, channel, *expr):
@@ -43,7 +43,7 @@ class ListBulkingBotProtocol (BotProtocol):
 		variable 'x'.
 		'''
 		expr = ' '.join (expr)
-		return map (lambda x: eval (expr,{'__builtins__':None},{'x': x}), flow)
+		return map (lambda x: self._safe_eval (expr, x=x), flow)
 
 	@botcommand
 	def cat (self, flow, out, user, channel, *args):
@@ -69,7 +69,7 @@ class ListBulkingBotProtocol (BotProtocol):
 		'''
 		\x02mass\x02 <command> [<arguments>]
 		Execute the command with the specified arguments mapped on every piped list item
-		The arguments string must contain '%s' exactly once, which will hold the iterated items
+		The arguments string must contain '?' exactly once, which will hold the iterated items
 		'''
 		d = Deferred ()
 		command = ' '.join (args).replace ('=>', '->')
@@ -77,6 +77,14 @@ class ListBulkingBotProtocol (BotProtocol):
 			d.chainDeferred (self._handle (user, channel, command.replace ('?', item), True))
 		d.callback (None)
 		return d
+
+	def _safe_eval(self, expr, **kwargs):
+		'''
+		Given the expression, evaluate it in a relatively safe context.
+		'''
+		if set(':_').intersection(expr):
+			return None
+		return eval (expr, {'__builtins__':None},kwargs)
 
 class PyBotProtocol (BotProtocol):
 	'''
@@ -89,7 +97,11 @@ class PyBotProtocol (BotProtocol):
 		Executes the specified python statement. The incoming piped message is stored in 'x'
 		Examples : 'py 1', 'py 1+1', 'py [1,2,3]'
 		'''
-		result = eval (' '.join (args),{'__builtins__':None},{'x': flow})
+		expr = ' '.join (args)
+		if set(':_').intersection(expr):
+			result = None
+		else:
+			result = eval (expr,{'__builtins__':None},{'x': flow})
 		if type (result) is list:
 			result = [str (x) for x in result]
 		else:

@@ -1,7 +1,11 @@
-OGNBot NEWS - User visible changes.
+pyircbot NEWS - User visible changes.
 
-* Noteworthy changes in release 0.2.? (?) [stable]
-  Released by ?, based on fossil check-in [?]
+* Noteworthy changes in release 0.2.3 (2013-09-23) [stable]
+  Released by kaiyou, based on git check-in [?]
+
+** Security mitigation when evaluating Python code
+
+** Migrated to Git for version management
 
 * Noteworthy changes in release 0.2.2 (2011-11-19) [stable]
   Released by kaiyou, based on fossil check-in [5fea44401e]

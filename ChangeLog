@@ -1,3 +1,10 @@
+2013-09-23	kaiyou <pierre@jaury.eu>
+
+	* src/pyircbot/evaluation.py: mitigate python eval attacks by
+	  blacklisting most useful characters
+
+	* src/pyircbot/behavior.py: backward Python26 compatibility
+
 2011-11-23	kaiyou <pierre@jaury.eu>
 	
 	* src/pyircbot/evaluation.py: renamed `echo` as `cat` and added

@@ -29,7 +29,8 @@ class DebugBotProtocol(BotProtocol):
 	'''
 	def sendmsg (self, out, channel, message):
 		if self.factory.debug:
-			out.append ('%s \x02<-\x02 %s' % (channel, message))
+			for line in message.split('\n'):
+				out.append ('%s \x02<-\x02 %s' % (channel, line))
 		else:
 			super(DebugBotProtocol, self).sendmsg (out, channel, message)
 		

@@ -99,9 +99,9 @@ class AsynchronousCallBotProtocol(BotProtocol):
 		'''
 		Initialization of specific attributes
 		'''
-		self._pool = {key: [] for key in self.factory.sync}
-		self._job = {key: None for key in self.factory.sync}
-		self._buffer = {key: [] for key in self.factory.sync}
+		self._pool = dict([(key, []) for key in self.factory.sync])
+		self._job = dict([(key, None) for key in self.factory.sync])
+		self._buffer = dict([(key, []) for key in self.factory.sync])
 		super(AsynchronousCallBotProtocol, self).connectionMade ()
 
 	def _handle (self, user, channel, message, wrap = False):
